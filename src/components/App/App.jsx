@@ -80,7 +80,13 @@ export const App = () => {
       {totalItems > galleryItems.length && (
         <Button onClick={handleLoadmoreImages}></Button>
       )}
-      {showModal && <Modal modalImg={modalImg} closeModal={closeModal} />}
+      {showModal && (
+        <Modal
+          modalImg={modalImg}
+          closeModal={closeModal}
+          showModal={showModal}
+        />
+      )}
     </div>
   );
 };
