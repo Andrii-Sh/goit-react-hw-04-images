@@ -5,22 +5,20 @@ import { createPortal } from 'react-dom';
 
 const modalRoot = document.querySelector('#modal-root');
 
-export const Modal = ({ modalImg, closeModal, showModal }) => {
+export const Modal = ({ modalImg: { url, alt }, closeModal }) => {
   useEffect(() => {
-    if (showModal) {
-      window.addEventListener('keydown', handleEscPress);
-    }
+    const handleEscPress = evt => {
+      if (evt.code === 'Escape') {
+        closeModal();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscPress);
 
     return () => {
       window.removeEventListener('keydown', handleEscPress);
     };
-  }, []);
-
-  const handleEscPress = evt => {
-    if (evt.code === 'Escape') {
-      closeModal();
-    }
-  };
+  }, [closeModal]);
 
   const handleBackdropClick = evt => {
     if (evt.currentTarget === evt.target) {
@@ -31,7 +29,7 @@ export const Modal = ({ modalImg, closeModal, showModal }) => {
   return createPortal(
     <div className={css.Overlay} onClick={handleBackdropClick}>
       <div className={css.Modal}>
-        <img src={modalImg.url} alt={modalImg.alt} />
+        <img src={url} alt={alt} />
       </div>
     </div>,
     modalRoot

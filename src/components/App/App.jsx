@@ -22,22 +22,21 @@ export const App = () => {
 
   useEffect(() => {
     if (query !== '') {
+      async function fetchData() {
+        try {
+          setIsLoading(true);
+          const data = await getSearchGallery(query, page);
+          setGalleryItems(prevItems => [...prevItems, ...data.hits]);
+          setTotalItems(data.totalHits);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
       fetchData();
     }
   }, [query, page]);
-
-  async function fetchData() {
-    try {
-      setIsLoading(true);
-      const data = await getSearchGallery(query, page);
-      setGalleryItems([...galleryItems, ...data.hits]);
-      setTotalItems(data.totalHits);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   const handleSearch = searchText => {
     if (query === searchText) {
@@ -50,7 +49,7 @@ export const App = () => {
   };
 
   const handleLoadmoreImages = () => {
-    setPage(page + 1);
+    setPage(prevPage => prevPage + 1);
   };
 
   const openModal = item => {
@@ -80,13 +79,7 @@ export const App = () => {
       {totalItems > galleryItems.length && (
         <Button onClick={handleLoadmoreImages}></Button>
       )}
-      {showModal && (
-        <Modal
-          modalImg={modalImg}
-          closeModal={closeModal}
-          showModal={showModal}
-        />
-      )}
+      {showModal && <Modal modalImg={modalImg} closeModal={closeModal} />}
     </div>
   );
 };
